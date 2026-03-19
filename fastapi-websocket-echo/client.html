@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Echo Test</title>
+</head>
+<body>
+    <h2>WebSocket Echo Test</h2>
+
+    <input id="messageInput" type="text" placeholder="Enter message">
+    <button onclick="sendMessage()">Send</button>
+
+    <h3>Messages from server:</h3>
+    <ul id="messages"></ul>
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8000/ws");
+
+        ws.onopen = function() {
+            console.log("Connected to WebSocket server");
+        };
+
+        ws.onmessage = function(event) {
+            const li = document.createElement("li");
+            li.textContent = event.data;
+            document.getElementById("messages").appendChild(li);
+        };
+
+        ws.onclose = function() {
+            console.log("Disconnected from server");
+        };
+
+        function sendMessage() {
+            const input = document.getElementById("messageInput");
+            if (input.value.trim() !== "") {
+                ws.send(input.value);
+                input.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
